@@ -22,7 +22,11 @@
   <div class="c">
     <header><h1>Ai_10.0~•×RDS TEAM×•~</h1><p>ফ্রি GPT-3.5 Turbo চ্যাটবট (কোনো key লাগবে না)</p></header>
     <div id="chat">
+<<<<<<< HEAD
       <div class="m b">হাই! এখন থেকে কোনো API key লাগবে না – শুধু লেখো 🚀</div>
+=======
+      <div class="m b">হাই! এখন থেকে কোনো API key লাগবে না – শুধু লেখো</div>
+>>>>>>> 5767cb6 (working proxy – chatanywhere)
     </div>
     <div class="i">
       <input type="text" id="msg" placeholder="এখানে লেখো..." autofocus>
@@ -32,6 +36,7 @@
   <script>
     const chat=document.getElementById('chat'),i=document.getElementById('msg');
     function add(t,c){const d=document.createElement('div');d.className='m '+c;d.innerHTML=t.replace(/\n/g,'<br>');chat.appendChild(d);chat.scrollTop=chat.scrollHeight;}
+<<<<<<< HEAD
     async function send(){const m=i.value.trim();if(!m)return;add(m,'u');i.value='';add('চিন্তা করছে...','b');
       try{
         const r=await fetch('https://chatgpt-api.shn.hk/v1/chat/completions',{
@@ -42,6 +47,19 @@
         const j=await r.json();
         chat.lastChild.innerHTML=(j.choices[0].message.content||'কিছু হয়েছে').replace(/\n/g,'<br>');
       }catch{chat.lastChild.innerHTML='ইন্টারনেট চেক করো';}
+=======
+    async function send(){
+      const m=i.value.trim();if(!m)return;add(m,'u');i.value='';add('চিন্তা করছে...','b');
+      try{
+        const r=await fetch('https://api.chatanywhere.com.cn/v1/chat/completions',{
+          method:'POST',
+          headers:{'Content-Type':'application/json'},
+          body:JSON.stringify({model:'gpt-3.5-turbo',messages:[{role:'user',content:m}],temperature:0.7})
+        });
+        const j=await r.json();
+        chat.lastChild.innerHTML=(j.choices[0].message.content||'কিছু হয়েছে').replace(/\n/g,'<br>');
+      }catch{e=>chat.lastChild.innerHTML='ইন্টারনেট বা সার্ভার সমস্যা, আবার চেষ্টা করো';}
+>>>>>>> 5767cb6 (working proxy – chatanywhere)
     }
     i.addEventListener('keypress',e=>{if(e.key==='Enter')send();});
   </script>
