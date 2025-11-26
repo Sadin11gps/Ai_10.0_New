@@ -7,42 +7,43 @@
   <style>
     *{margin:0;padding:0;box-sizing:border-box}
     body{font-family:Segoe UI,sans-serif;background:#0f0f0f;color:#fff}
-    .container{max-width:800px;margin:20px auto;padding:20px}
+    .c{max-width:800px;margin:20px auto;padding:20px}
     header{text-align:center;padding:15px;background:#1a1a1a;border-radius:10px;margin-bottom:20px}
-    h1{font-size:24px}
     #chat{height:65vh;overflow-y:auto;padding:15px;background:#111;border-radius:10px;margin-bottom:15px}
-    .msg{margin:10px 0;padding:12px;border-radius:12px;max-width:80%}
-    .user{background:#00ff9d;color:#000;margin-left:auto}
-    .bot{background:#333}
-    .input-box{display:flex;gap:8px}
+    .m{margin:10px 0;padding:12px;border-radius:12px;max-width:80%;word-wrap:break-word}
+    .u{background:#00ff9d;color:#000;margin-left:auto}
+    .b{background:#333}
+    .i{display:flex;gap:8px}
     input{flex:1;padding:12px;background:#222;color:#fff;border:none;border-radius:8px}
-    button{padding:12px 20px;background:#00ff9d;color:#000;font-weight:bold;cursor:pointer;border:none;border-radius:8px}
+    button{padding:12px 20px;background:#00ff9d;color:#000;font-weight:bold;border:none;border-radius:8px;cursor:pointer}
   </style>
 </head>
 <body>
-  <div class="container">
-    <header><h1>Ai_10.0~•×RDS TEAM×•~</h1><p>বাংলাদেশের সেরা ফ্রি GPT-3.5 Turbo চ্যাটবট</p></header>
+  <div class="c">
+    <header><h1>Ai_10.0~•×RDS TEAM×•~</h1><p>ফ্রি GPT-3.5 Turbo চ্যাটবট (কোনো key লাগবে না)</p></header>
     <div id="chat">
-      <div class="msg bot">হাই! আমি এখন GPT-3.5-turbo দিয়ে চলছি<br>প্রথমবার নিচে তোমার OpenAI key দাও → তারপর যেকোনো প্রশ্ন করো!</div>
+      <div class="m b">হাই! এখন থেকে কোনো API key লাগবে না – শুধু লেখো 🚀</div>
     </div>
-    <div class="input-box">
+    <div class="i">
       <input type="text" id="msg" placeholder="এখানে লেখো..." autofocus>
       <button onclick="send()">Send</button>
     </div>
   </div>
   <script>
-    const chat=document.getElementById('chat'),msgInput=document.getElementById('msg');
-    let apiKey=localStorage.getItem('openai_key')||'';
-    if(!apiKey||!apiKey.startsWith('sk-')){apiKey=prompt(`প্রথমবারের জন্য OpenAI API Key লাগবে (১০০% ফ্রি)\n\nএখানে ক্লিক করে Key নাও → https://platform.openai.com/api-keys\n\n→ "Create new secret key" → কপি করে এখানে পেস্ট করো\n\n(শুধু তোমার ব্রাউজারে সেভ থাকবে)`);
-      if(apiKey&&apiKey.startsWith('sk-')){localStorage.setItem('openai_key',apiKey);addMsg('Key সেভ হয়েছে! এখন GPT-3.5 চলবে','bot');}
+    const chat=document.getElementById('chat'),i=document.getElementById('msg');
+    function add(t,c){const d=document.createElement('div');d.className='m '+c;d.innerHTML=t.replace(/\n/g,'<br>');chat.appendChild(d);chat.scrollTop=chat.scrollHeight;}
+    async function send(){const m=i.value.trim();if(!m)return;add(m,'u');i.value='';add('চিন্তা করছে...','b');
+      try{
+        const r=await fetch('https://chatgpt-api.shn.hk/v1/chat/completions',{
+          method:'POST',
+          headers:{'Content-Type':'application/json'},
+          body:JSON.stringify({model:'gpt-3.5-turbo',messages:[{role:'user',content:m}]})
+        });
+        const j=await r.json();
+        chat.lastChild.innerHTML=(j.choices[0].message.content||'কিছু হয়েছে').replace(/\n/g,'<br>');
+      }catch{chat.lastChild.innerHTML='ইন্টারনেট চেক করো';}
     }
-    function addMsg(t,c){const d=document.createElement('div');d.className='msg '+c;d.innerHTML=t.replace(/\n/g,'<br>');chat.appendChild(d);chat.scrollTop=chat.scrollHeight;}
-    async function send(){const m=msgInput.value.trim();if(!m||!apiKey)return;
-      addMsg(m,'user');msgInput.value='';addMsg('চিন্তা করছে...','bot');
-      try{const r=await fetch('https://api.openai.com/v1/chat/completions',{method:'POST',headers:{'Content-Type':'application/json','Authorization':`Bearer ${apiKey}`},body:JSON.stringify({model:'gpt-3.5-turbo',messages:[{role:'user',content:m}],temperature:0.7})});
-        const d=await r.json();const rep=d.choices?d.choices[0].message.content:'Key ভুল বা লিমিট শেষ';
-        chat.lastChild.innerHTML=rep.replace(/\n/g,'<br>');}catch{chat.lastChild.innerHTML='ইন্টারনেট বা Key চেক করো';}}
-    msgInput.addEventListener('keypress',e=>{if(e.key==='Enter')send();});
+    i.addEventListener('keypress',e=>{if(e.key==='Enter')send();});
   </script>
 </body>
 </html>
