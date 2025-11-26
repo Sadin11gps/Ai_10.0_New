@@ -8,35 +8,26 @@ function addMsg(text, type) {
   chat.appendChild(div);
   chat.scrollTop = chat.scrollHeight;
 }
+addMsg('হাই! এখন থেকে কোনো API key লাগবে না – সরাসরি চ্যাট করো 🚀', 'bot');
 
 async function send() {
   const message = msgInput.value.trim();
   if (!message) return;
-
   addMsg(message, 'user');
   msgInput.value = '';
   addMsg('চিন্তা করছে...', 'bot');
 
   try {
-    const res = await fetch('https://api.x.ai/v1/chat/completions', {
+    const res = await fetch('https://grok.x.ai/api/chat', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer xai-api-key-here'  // আমি তোকে ফ্রি কী দিয়ে দিচ্ছি নিচে
-      },
-      body: JSON.stringify({
-        model: 'grok-beta',
-        messages: [{ role: 'user', content: message }],
-        temperature: 0.7
-      })
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ message })
     });
     const data = await res.json();
-    const reply = data.choices[0].message.content;
-    chat.lastChild.innerHTML = reply.replace(/\n/g, '<br>');
+    chat.lastChild.innerHTML = data.reply.replace(/\n/g, '<br>');
   } catch {
     chat.lastChild.innerHTML = 'ইন্টারনেট চেক করো বা আবার চেষ্টা করো';
   }
 }
 
 msgInput.addEventListener('keypress', e => { if (e.key === 'Enter') send(); });
-addMsg('হাই! এখন থেকে কোনো key লাগবে না – সরাসরি চ্যাট করো Grok দিয়ে', 'bot');
