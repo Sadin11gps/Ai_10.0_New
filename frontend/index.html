@@ -20,7 +20,7 @@
 </head>
 <body>
   <div class="c">
-    <header><h1>Ai_10.0~•×RDS TEAM×•~</h1><p>ফ্রি GPT-3.5 Turbo চ্যাটবট (কোনো key লাগবে না)</p></header>
+    <header><h1>Ai_10.0~•×RDS TEAM×•~</h1><p>ফ্রি GPT-4o-mini চ্যাটবট (কোনো key লাগবে না)</p></header>
     <div id="chat">
       <div class="m b">হাই! এখন থেকে কোনো API key লাগবে না – শুধু লেখো 🚀</div>
     </div>
@@ -29,21 +29,17 @@
       <button onclick="send()">Send</button>
     </div>
   </div>
+  <script src="https://js.puter.com/v2/puter.js"></script>
   <script>
     const chat=document.getElementById('chat'),i=document.getElementById('msg');
     function add(t,c){const d=document.createElement('div');d.className='m '+c;d.innerHTML=t.replace(/\n/g,'<br>');chat.appendChild(d);chat.scrollTop=chat.scrollHeight;}
     async function send(){
       const m=i.value.trim();if(!m)return;add(m,'u');i.value='';add('চিন্তা করছে...','b');
       try{
-        const r=await fetch('https://api.gptgod.online/v1/chat/completions',{
-          method:'POST',
-          headers:{'Content-Type':'application/json'},
-          body:JSON.stringify({model:'gpt-3.5-turbo',messages:[{role:'user',content:m}],temperature:0.7})
-        });
-        const j=await r.json();
-        chat.lastChild.innerHTML=(j.choices?.[0]?.message?.content||'কিছু হয়েছে').replace(/\n/g,'<br>');
+        const response = await puter.ai.chat({ model: 'gpt-4o-mini', messages: [{ role: 'user', content: m }] });
+        chat.lastChild.innerHTML = response.choices[0].message.content.replace(/\n/g, '<br>');
       }catch{
-        chat.lastChild.innerHTML='ইন্টারনেট চেক করো বা ১০ সেকেন্ড পর আবার চেষ্টা করো';
+        chat.lastChild.innerHTML = 'ইন্টারনেট চেক করো বা আবার চেষ্টা করো';
       }
     }
     i.addEventListener('keypress',e=>{if(e.key==='Enter')send();});
