@@ -36,10 +36,10 @@
     async function send(){
       const m=i.value.trim();if(!m)return;add(m,'u');i.value='';add('চিন্তা করছে...','b');
       try{
-        const response = await puter.ai.chat({ model: 'gpt-4o-mini', messages: [{ role: 'user', content: m }] });
-        chat.lastChild.innerHTML = response.choices[0].message.content.replace(/\n/g, '<br>');
-      }catch{
-        chat.lastChild.innerHTML = 'ইন্টারনেট চেক করো বা আবার চেষ্টা করো';
+        const res = await puter.ai.ask(m, {model: "gpt-4o-mini"});
+        chat.lastChild.innerHTML = res.answer.replace(/\n/g,'<br>');
+      }catch(e){
+        chat.lastChild.innerHTML = 'ইন্টারনেট চেক করো বা আবার চেষ্টা করো<br><small>('+e.message+')</small>';
       }
     }
     i.addEventListener('keypress',e=>{if(e.key==='Enter')send();});
